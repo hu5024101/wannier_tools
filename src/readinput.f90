@@ -162,6 +162,7 @@ subroutine readinput
 
    SlabBdG_calc          = .FALSE.
    BdGChern_calc         = .FALSE.   
+   BdG_phase_calc        = .FALSE.
 
    read(1001, CONTROL, iostat=stat)
    SlabQPI_kplane_calc= SlabQPI_kplane_calc.or.SlabQPI_calc
@@ -178,7 +179,7 @@ subroutine readinput
       write(*, *)"QPI_unfold_plane_calc, "
       write(*, *)"BulkFatBand_calc, "
       write(*, *)"BulkGap_cube_calc,BulkGap_plane_calc"
-      write(*, *)"SlabBand_calc,SlabBdG_calc,SlabBandWaveFunc_calc"
+      write(*, *)"SlabBand_calc,SlabBdG_calc,BdG_phase_calc,SlabBandWaveFunc_calc"
       write(*, *)"WireBand_calc,SlabSS_calc,SlabArc_calc "
       write(*, *)"SlabQPI_calc"
       write(*, *)"SlabQPI_kpath_calc"
@@ -300,6 +301,7 @@ subroutine readinput
       write(stdout, *) "ChargeDensity_selected_energies_calc : ", ChargeDensity_selected_energies_calc
       write(stdout, *) "valley_projection_calc : "           , valley_projection_calc
       write(stdout, *) "SlabBdG_calc        : ",  SlabBdG_calc
+      write(stdout, *) "BdG_phase_calc      : ",  BdG_phase_calc
       write(stdout, *) "BdGChern_calc       : ",  BdGChern_calc
    endif
 
@@ -325,7 +327,7 @@ subroutine readinput
    Bz = 0d0
 
    !>Zeeman field on surface for slab hamiltonian
-   Add_surf_zeeman_field= 1
+   Add_surf_zeeman_field= 2
    Bx_surf= 0d0
    By_surf= 0d0
    Bz_surf= 0d0
@@ -334,8 +336,14 @@ subroutine readinput
    mu_BdG = 0d0
 
    !>s-Wave Superconducting gap
-   Add_Delta_BdG = 3
+   Add_Delta_BdG = 1
    Delta_BdG = 0d0   
+   
+   !> Delta_decay (Ref: Theory of the Superconducting Proximity Effect), By default, we use the experimental parameters of Bi2Se3/NbSe2 heterostructure
+   t_BdG  = 0.6                       ! Temperature T/Tc
+   xi_BdG = 7.7                       ! Superconducting correlation length 
+   l_BdG  = 16                        ! mean free path
+  
 
    Bmagnitude = 0d0
    Btheta = -99999d0
@@ -442,6 +450,7 @@ subroutine readinput
       write(stdout, '(1x, a, 3f16.6)')"Bx_surf, By_surf, Bz_surf :", Bx_surf,By_surf, Bz_surf
       write(stdout, '(1x, a, 3f16.6)')"Chemical potential mu for BdG (eV):", mu_BdG
       write(stdout, '(1x, a, i6)')"Add_Delta_BdG for slab system: ", Add_Delta_BdG
+      write(stdout, '(1x, a, 3f16.6)')"Temperature, mean free path, correlation length for superconducting proximity effect: ", t_BdG, xi_BdG, l_BdG
       write(stdout, '(1x, a, 3f16.6)')"s-wave superconducting pairing Delta (eV): ", Delta_BdG
    endif
 
